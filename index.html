@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>reveal.js</title>
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="css/style.css">
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1> JS PATTERNS </h1>
+				</section>
+				<section class="stack present">
+					<section class="present">
+						<h2>What is a pattern?</h2>
+						<p class="fragment" data-fragment-index="0">These are common solutions to certain problems in product development.</p>
+					</section>
+					<section class="present">
+						<h2>Pattern Benefits</h2>
+						<ul>
+							<li class="fragment" data-fragment-index="0">Quick problem solving</li>
+							<li class="fragment" data-fragment-index="1">Clean code</li>
+							<li class="fragment" data-fragment-index="2">Effective communication with other programmers</li>
+						</ul>
+					</section>
+					<section class="present">
+						<h2>Сomposition of patterns</h2>
+						<table>
+								<tr>
+									<th  class="fragment" data-fragment-index="0" style="border: none; color: goldenrod; text-align: center;">Name</th>
+									<th  class="fragment" data-fragment-index="1" style="border: none; color: goldenrod; text-align: center;">Problems and Solutions</th>
+									<th  class="fragment" data-fragment-index="2" style="border: none; color: goldenrod; text-align: center;">Effects</th>
+								</tr>
+								<tr>
+									<td  class="fragment" style="vertical-align: top;" data-fragment-index="0">
+										<img src="https://res.cloudinary.com/p-d/image/upload/v1543825451/name.jpg" height="300" width="400" style="border: none;">
+									</td>
+									<td  class="fragment" style="vertical-align: top;" data-fragment-index="1">
+										<img src="https://res.cloudinary.com/p-d/image/upload/v1543824816/composotion.png" height="400" width="700" style="border: none;">
+									</td>
+									<td  class="fragment" style="vertical-align: top;" data-fragment-index="2">
+										<img src="https://res.cloudinary.com/p-d/image/upload/v1543820317/dont.jpg" height="300" width="400" style="border: none;">
+									</td>
+								</tr>
+							</table>
+					</section>
+				</section>
+				<section class="present">
+					<h2>Kinds of Patterns</h2>
+					<table>
+						<tr style="font-size: 3rem;">
+							<th style="border: none;">Creation Patterns</th>
+							<th style="border: none;">Structural Patterns</th>
+							<th style="border: none;">Patterns of Behavior</th>
+						</tr>
+						<tr style="font-size: 2rem">
+							<td style="vertical-align: top;">
+								<ul>
+									<li>Singleton</li>
+									<li>Factory</li>
+									<li>Abstract Factory</li>
+									<li>Builder</li>
+									<li>Prototype</li>
+								</ul>
+							</td>
+							<td style="vertical-align: top;">
+								<ul>
+									<li>Adapter</li>
+									<li>Facade</li>
+									<li>Decorator</li>
+									<li>Bridge</li>
+									<li>Composite</li>
+									<li>Proxy</li>
+								</ul>
+							</td>
+							<td style="vertical-align: top;">
+								<ul>
+									<li>Observer</li>
+									<li>Mediator</li>
+									<li>Strategy</li>
+									<li>Chain of Responsibility</li>
+									<li>Team</li>
+									<li>Condition</li>
+									<li>Visitor</li>
+								</ul>
+							</td>
+						</tr>
+					</table>
+				</section>
+				<section class="stack present">
+					<section class="present">
+							<h2>Creation Patterns</h2>
+							<p class="fragment">- to create objects without adding extra dependencies to the program</p>
+					</section>
+					<section class="present">
+							<h2>Factory</h2>
+							<p class="fragment" data-fragment-index="0">to create objects without adding extra dependencies to the program</p>
+							<h6 class="fragment" style="color: green;" data-fragment-index="1"> Code without factory</h6>
+							<pre class="fragment" data-fragment-index="1"><code data-trim>
+								//pizza.js
+								class Pizza {
+									constructor(name) {
+										this.name = name;
+									}
+								}
+								module.exports = Pizza;
+							</code></pre>
+							<pre class="fragment" data-fragment-index="2">
+								<code data-trim>
+									//index.js
+									const Pizza = require('/pizza');
+
+									const eat = new Pizza('peprony');
+								</code>
+							</pre>
+							<p class="fragment" data-fragment-index="3">index.js module depends on pizza.js module</p>
+					</section>
+					<section class="present">
+						<h2>Solution</h2>
+						<p class="fragment" data-fragment-index="0">Move the creation of objects to another class</p>
+						<pre class="fragment" data-fragment-index="1">
+							<code data-trim>
+								//pizza.js
+								class Pizza {
+									constructor(name) {
+										this.name = name;
+									}
+								}
+								module.exports = Pizza;
+
+								//burger.js
+								class Burger {
+									constructor(name) {
+									this.name = name;
+									console.log(name); // name of burger
+									}
+								}
+							
+								module.exports = Burger;						   
+
+								//factory.js
+								const Burger = require('./burger.js');
+								const Pizza = require('./pizza.js');
+								
+								class Factory {
+									static createEat(type, ...args) {
+									switch (type) {
+										case 'pizza': 
+										return new Pizza(...args);
+										case 'burger': 
+										return new Burger(...args);
+										}
+									}
+								}
+								
+								module.exports = Factory;
+                // index.js
+								const Factory = require('./factory.js');
+
+								const eat = Factory.createEat('burger','shefburger')
+							</code>
+						</pre>
+					</section>
+					<section class="present">
+						<h2>advantages and disadvantages</h2>
+						<p class="fragment" data-fragment-index="0"> + ridding the class of binding to other classes</p>
+						<p class="fragment" data-fragment-index="1"> + the whole logic of type creation is concentrated in one place</p>
+						<p class="fragment" data-fragment-index="2"> - increase in complexity with a small number of classes</p>
+          </section>
+          <section class="present">
+							<h2>Builder</h2>
+							<p class="fragment" data-fragment-index="0">- used to provide a user-friendly interface for creating complex objects.</p>
+					</section>
+					<section class="present">
+            <p>Arbitrary classes</p>
+						<pre class="fragment" data-fragment-index="1">
+							<code data-trim >
+                  class Cheese {
+                    constructor() {
+                      const div = document.getElementById('pizza')
+                      div.innerHTML += "<img src='https://res.cloudinary.com/p-d/image/upload/v1543775398/32377cheesewedge_98913.svg' height=100 width=100>";
+                    }
+                  }
+                  
+                  class Sauce {
+                    constructor() {
+                      const div = document.getElementById('pizza')
+                      div.innerHTML += ("<img src='https://res.cloudinary.com/p-d/image/upload/v1543775387/3558100-flovouring-ketchup-liquid-sauce-seasoning_107841.svg' height=100 width=100>");
+                    }
+                  }
+                  
+                  class Sausage {
+                    constructor() {
+                      const div = document.getElementById('pizza')
+                      div.innerHTML += ("<img src='https://res.cloudinary.com/p-d/image/upload/v1543775398/sausage_icon-icons.com_60773.svg' height=100 width=100>");
+                    }
+                  }
+                  
+                  class Onion {
+                    constructor() {
+                      const div = document.getElementById('pizza')
+                      div.innerHTML += ("<img src='https://res.cloudinary.com/p-d/image/upload/v1543775399/Onion_icon-icons.com_68718.svg' height=100 width=100>");
+                    }
+                  }
+                  
+                  class Tomatoes {
+                    constructor() {
+                      const div = document.getElementById('pizza')
+                      div.innerHTML += ("<img src='https://res.cloudinary.com/p-d/image/upload/v1543775398/Tomato_icon-icons.com_68675.svg' height=100 width=100>");
+                    }
+                  }
+							</code>
+						</pre>
+          </section>
+          <section class="present">
+            <span>builder.js</span>
+            <pre class="fragment" data-fragment-index="1">
+              <code data-trim >
+                class Pizza {
+                  constructor(builder) {
+                    this.cheese = builder.cheese;
+                    this.sausage = builder.sausage;
+                    this.tomatoes = builder.tomatoes;
+                    this.onion = builder.onion;
+                    this.sauce = builder.sauce;
+                  }
+                }
+                
+                class PizzaBuilder {
+                  constructor() {
+                    this.cheese = null;
+                    this.sausage = null;
+                    this.tomatoes = null;
+                    this.onion = null;
+                    this.sauce = null;
+                  }
+                
+                  setCheese(cheese) {
+                    this.cheese = cheese;
+                    return this;
+                  }
+                
+                  setSausage(sausage) {
+                    this.sausage = sausage;
+                    return this;
+                  }
+                  
+                  setTomatoes(tomatoes) {
+                    this.tomatoes = tomatoes;
+                    return this;
+                  }
+                  
+                  setOnion(onion) {
+                    this.onion = onion;
+                    return this;
+                  }
+                  
+                  setSauce(sauce) {
+                    this.sauce = sauce;
+                    return this;
+                  }
+                
+                  buildPizza() {
+                    return new Pizza(this);
+                  }
+                  
+                }
+                
+                class Director {
+                  constructor(builder) {
+                    this.builder = builder;
+                  }
+                  tastyPizza () {
+                    this.builder
+                      .setCheese(new Cheese())
+                      .setOnion(new Onion())
+                      .setSauce(new Sauce())
+                      .setSausage(new Sausage())
+                      .setTomatoes(new Tomatoes())
+                    return this.builder.buildPizza();
+                  }
+              
+                  studentPizza () {
+                    this.builder
+                      .setCheese(new Cheese())
+                      .setSauce(new Sauce())
+                      .setSausage(new Sausage())
+                    return this.builder.buildPizza();
+                  }
+              
+                }
+              </code>
+            </pre>
+          </section>
+          <section class="present">
+            <span>index.js</span>
+            <pre class="fragment" data-fragment-index="1">
+              <code data-trim >
+                  const pizzabuilder = new PizzaBuilder();
+                  const director = new Director(pizzabuilder);
+              </code>
+            </pre>
+					</section>
+					<section>
+						<h2>result</h2>
+						<iframe data-src="https://codepen.io/DmitryDias/full/VVgoxM/" height="400" width="60%"></iframe>
+					</section>
+					<section class="present">
+            <h2>advantages and disadvantages</h2>
+            <p class="fragment" data-fragment-index="0"> + possibility to divide the creation of a large object into steps</p>
+						<p class="fragment" data-fragment-index="1"> + the ability to change the configuration of the object without much effort</p>
+						<p class="fragment" data-fragment-index="2"> - increase in complexity with a small objects</p>
+					</section>
+				</section>
+				<section class="stack present">
+					<section class="present">
+						<h2>Structural Patterns</h2>
+						<p class="fragment">- solve questions of various connections between objects</p>
+					</section>
+				</section>
+				<section class="stack present">
+					<section class="present">
+						<h2>Patterns of Behavior</h2>
+						<p class="fragment">- connected with the way objects communicate with each other</p>		
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			Reveal.initialize({
+				width: "100%",
+				height: "100%",
+				margin: 0,
+				minScale: 1,
+				maxScale: 1,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
