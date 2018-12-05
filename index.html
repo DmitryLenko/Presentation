@@ -166,7 +166,8 @@
 								}
 								
 								module.exports = Factory;
-                // index.js
+								
+								// index.js
 								const Factory = require('./factory.js');
 
 								const eat = Factory.createEat('burger','shefburger')
@@ -175,7 +176,7 @@
 					</section>
 					<section class="present">
 						<h2>advantages and disadvantages</h2>
-						<p class="fragment" data-fragment-index="0"> + ridding the class of binding to other classes</p>
+						<p class="fragment" data-fragment-index="0"> + eliminate the class of binding to other classes</p>
 						<p class="fragment" data-fragment-index="1"> + the whole logic of type creation is concentrated in one place</p>
 						<p class="fragment" data-fragment-index="2"> - increase in complexity with a small number of classes</p>
           </section>
@@ -329,12 +330,166 @@
 						<h2>Structural Patterns</h2>
 						<p class="fragment">- solve questions of various connections between objects</p>
 					</section>
+					<section class="present">
+						<h2>Adapter</h2>
+						<p class="fragment">- Used when we want to add a class, but its interface that we want to use does not match the client code.</p>
+						<img src="https://res.cloudinary.com/p-d/image/upload/v1543992954/Adapter_design_pattern_in_work_Java.jpg" alt="adapter" height="400" width="400">
+					</section>
+					<section class="present">
+						<h2>Adapter</h2>
+						<pre>
+              <code data-trim >
+								
+								/*
+								Lion interface :
+								roar()
+								*/
+
+								class AfricanLion  {
+									roar() {}
+								}
+
+								class AsianLion  {
+									roar() {}
+								}
+              </code>
+            </pre>
+					</section>
+					<section class="present">
+						<h2>Adapter</h2>
+						<pre>
+							<code data-trim >
+								class Hunter {
+									hunt(lion) {
+										// ... some code before
+										lion.roar()
+										//... some code after
+									}
+								}
+							</code>
+						</pre>
+					</section>
+					<section class="present">
+						<h2>Adapter</h2>
+						<pre>
+							<code data-trim >
+								// This needs to be added to the game
+								class WildDog {
+									bark() {}
+								}
+								
+								// Adapter around wild dog to make it compatible with our game
+								class WildDogAdapter {
+									constructor(dog) {
+										this.dog = dog;
+									}
+									
+									roar() {
+										this.dog.bark();
+									}
+								}
+							</code>
+						</pre>
+					</section>
+					<section class="present">
+						<h2>Adapter</h2>
+						<pre>
+							<code data-trim >
+								wildDog = new WildDog()
+								wildDogAdapter = new WildDogAdapter(wildDog)
+								
+								hunter = new Hunter()
+								hunter.hunt(wildDogAdapter)
+							</code>
+						</pre>
+					</section>
 				</section>
 				<section class="stack present">
 					<section class="present">
 						<h2>Patterns of Behavior</h2>
 						<p class="fragment">- connected with the way objects communicate with each other</p>		
 					</section>
+					<section class="present">
+						<h2>Observer</h2>
+						<p class="fragment">- Defines a dependency between objects so that whenever an object changes its state, all its dependents are notified.</p>
+						<img src="https://res.cloudinary.com/p-d/image/upload/v1543994694/observer.png" alt="adapter" height="400" width="600">
+					</section>
+					<section class="present">
+						<h4>Observer</h4>
+						<pre>
+              <code data-trim >		
+								//jobseeker.js				
+								class JobSeeker {
+									constructor(name) {
+										this._name = name
+									}
+							
+									notify(jobPost) {
+										document.write(this._name, 'has been notified of a new posting :', jobPost.title)
+									}
+								}
+              </code>
+						</pre>
+					</section>
+					<section class="present">
+						<h4>Observer</h4>
+						<pre>
+							<code data-trim>
+								//jobboard.js
+								class JobBoard {
+									constructor() {
+										this._subscribers = []
+									}
+							
+									subscribe(jobSeeker) {
+										this._subscribers.push(jobSeeker)
+									}
+
+									unSubscribe(jobSeeker) {
+										this._subscribers.forEach((item, index) => {
+											item === jobSeeker ? this._subscribers.splice(index, 1) : false;
+										})
+									}
+							
+									addJob(jobPosting) {
+										this._subscribers.forEach(subscriber => {
+											subscriber.notify(jobPosting)
+										})
+									}
+								}
+							</code>
+						</pre>
+					</section>
+					<section class="present">
+						<h4>Observer</h4>
+						<pre>
+							<code data-trim >
+								//index.js
+								const JobPost = title => ({
+									title: title;
+								})								
+								//Create jobSeeker
+								const jonDoe = new JobSeeker('John Doe')
+								const janeDoe = new JobSeeker('Jane Doe')
+								const kaneDoe = new JobSeeker('Kane Doe')
+								
+								// Create subscribers
+								const jobBoard = new JobBoard()
+								jobBoard.subscribe(jonDoe)
+								jobBoard.subscribe(janeDoe)
+								
+								// Add a new job and see if subscribers get notified
+								jobBoard.addJob(JobPost('Software Engineer'))
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h2>result</h2>
+						<iframe data-src="https://codepen.io/DmitryDias/full/VVOEJx/" height="600" width="90%"></iframe>
+					</section>
+				</section>
+				<section>
+						<h2>Thanks for attention</h2>
 				</section>
 			</div>
 		</div>
